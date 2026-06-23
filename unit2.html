@@ -137,6 +137,7 @@
         align-items: center;
         gap: clamp(4px, 1.5vw, 10px);
         flex-wrap: nowrap;
+        <button class="reset-btn" id="voiceBtn" onclick="toggleVoice()">🔊 Voice</button>
       }
       .pill {
         background: var(--white);
@@ -417,8 +418,6 @@
       <div class="header">
         <h1>Unit 2</h1>
         <div class="hud">
-          <div class="pill">⭐ Matches: <span id="matchCount">0</span>/8</div>
-          <div class="pill">🔄 Tries: <span id="tryCount">0</span></div>
           <button class="reset-btn" id="resetBtn">Play Again 🦜</button>
           <a class="reset-btn" href="index.html">⬅️ Back</a>
         </div>
@@ -442,7 +441,7 @@
         { img: "images/marker.png", word: "marker" },
         { img: "images/phone.png", word: "phone" },
         { img: "images/glasses.png", word: "glasses" },
-        { img: "images/glue stick.png", word: "glue stick" },
+        { img: "images/glue-stick.png", word: "glue stick" },
         { img: "images/umbrella.png", word: "umbrella" },
         { img: "images/watch.png", word: "watch" },
         { img: "images/camera.png", word: "camera" },
@@ -559,7 +558,7 @@
 
         el.classList.add("flipped");
         flippedCards.push({ el, card });
-
+        speak(card.type === "image" ? PAIRS[card.pairId].word : card.value);
         if (flippedCards.length === 2) {
           tries++;
           document.getElementById("tryCount").textContent = tries;
@@ -617,7 +616,26 @@
         document.getElementById("overlay").classList.add("show");
         playWinFanfare();
       }
+      let voiceOn = true;
 
+      function speak(text) {
+        if (!voiceOn) return;
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = "en-GB";
+        utterance.rate = 0.9;
+        utterance.pitch = 1.1;
+        const voices = window.speechSynthesis.getVoices();
+        const preferred = voices.find((v) => v.lang === "en-GB");
+        if (preferred) utterance.voice = preferred;
+        window.speechSynthesis.speak(utterance);
+      }
+
+      function toggleVoice() {
+        voiceOn = !voiceOn;
+        document.getElementById("voiceBtn").textContent = voiceOn
+          ? "🔊 Voice"
+          : "🔇 Voice";
+      }
       function newGame() {
         matches = 0;
         tries = 0;

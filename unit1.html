@@ -417,9 +417,10 @@
       <div class="header">
         <h1>Unit 1</h1>
         <div class="hud">
-          <div class="pill">⭐ Matches: <span id="matchCount">0</span>/8</div>
-          <div class="pill">🔄 Tries: <span id="tryCount">0</span></div>
           <button class="reset-btn" id="resetBtn">Play Again 🦜</button>
+          <button class="reset-btn" id="voiceBtn" onclick="toggleVoice()">
+            🔊 Voice
+          </button>
           <a class="reset-btn" href="index.html">⬅️ Back</a>
         </div>
       </div>
@@ -618,6 +619,19 @@
         playWinFanfare();
       }
 
+      let voiceOn = true;
+
+      function speak(text) {
+        if (!voiceOn) return;
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = "en-GB";
+        utterance.rate = 0.9;
+        utterance.pitch = 1.1;
+        const voices = window.speechSynthesis.getVoices();
+        const preferred = voices.find((v) => v.lang === "en-GB");
+        if (preferred) utterance.voice = preferred;
+        window.speechSynthesis.speak(utterance);
+      }
       function newGame() {
         matches = 0;
         tries = 0;
