@@ -314,22 +314,6 @@
         }
       }
 
-      @media (orientation: landscape) and (max-width: 926px) {
-        .wrap,
-        .overlay {
-          display: none;
-        }
-        .rotate-msg {
-          display: flex;
-        }
-      }
-
-      @media (orientation: portrait) {
-        .rotate-msg {
-          display: none;
-        }
-      }
-
       .rotate-msg {
         display: none;
         position: fixed;
@@ -478,22 +462,22 @@
         osc.start(startTime);
         osc.stop(startTime + duration + 0.02);
       }
-      function playMatchJingle() {
-        const ctx = getCtx(),
-          now = ctx.currentTime;
+      async function playMatchJingle() {
+        const ctx = await getCtx();
+        const now = ctx.currentTime;
         [523.25, 659.25, 783.99, 1046.5].forEach((f, i) =>
           playTone(f, now + i * 0.09, 0.22, 0.22),
         );
       }
-      function playWrongSound() {
-        const ctx = getCtx(),
-          now = ctx.currentTime;
+      async function playWrongSound() {
+        const ctx = await getCtx();
+        const now = ctx.currentTime;
         playTone(220, now, 0.18, 0.12);
         playTone(196, now + 0.08, 0.18, 0.1);
       }
-      function playWinFanfare() {
-        const ctx = getCtx(),
-          now = ctx.currentTime;
+      async function playWinFanfare() {
+        const ctx = await getCtx();
+        const now = ctx.currentTime;
         [523.25, 523.25, 659.25, 783.99, 1046.5, 1318.51].forEach((f, i) =>
           playTone(f, now + [0, 0.15, 0.3, 0.45, 0.6, 0.8][i], 0.3, 0.22),
         );
@@ -559,7 +543,7 @@
       function onCardClick(el, card) {
         getCtx();
         if (locked) return;
-        if (locked) return;
+
         if (
           el.classList.contains("flipped") ||
           el.classList.contains("matched")
@@ -569,7 +553,7 @@
 
         el.classList.add("flipped");
         flippedCards.push({ el, card });
-        speak(card.type === "image" ? PAIRS[card.pairId].word : card.value);
+
         if (flippedCards.length === 2) {
           tries++;
 
@@ -627,37 +611,13 @@
         document.getElementById("overlay").classList.add("show");
         playWinFanfare();
       }
-      let voiceOn = true;
 
-      function speak(text) {
-        if (!voiceOn) return;
-        const utterance = new SpeechSynthesisUtterance(text);
-        utterance.lang = "en-GB";
-        utterance.rate = 0.9;
-        utterance.pitch = 1.1;
-
-        function speak(text) {
-          if (!voiceOn) return;
-          const utterance = new SpeechSynthesisUtterance(text);
-          utterance.lang = "en-US";
-          utterance.rate = 0.9;
-          utterance.pitch = 1.1;
-          window.speechSynthesis.speak(utterance);
-        }
-
-        if (window.speechSynthesis.getVoices().length === 0) {
-          window.speechSynthesis.onvoiceschanged = trySpeak;
-        } else {
-          trySpeak();
-        }
+      if (window.speechSynthesis.getVoices().length === 0) {
+        window.speechSynthesis.onvoiceschanged = trySpeak;
+      } else {
+        trySpeak();
       }
 
-      function toggleVoice() {
-        voiceOn = !voiceOn;
-        document.getElementById("voiceBtn").textContent = voiceOn
-          ? "🔊 Voice"
-          : "🔇 Voice";
-      }
       function newGame() {
         matches = 0;
         tries = 0;
