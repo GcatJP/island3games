@@ -119,10 +119,10 @@
       .header {
         display: flex;
         align-items: center;
-        justify-content: space-between;
+        justify-content: center;
         flex-shrink: 0;
         padding: 4px 0 6px;
-        gap: 8px;
+        gap: clamp(8px, 2vw, 16px);
       }
       h1 {
         font-family: "Chalkboard SE", "Comic Sans MS", cursive, sans-serif;
@@ -131,14 +131,12 @@
         -webkit-text-stroke: 1.5px var(--ocean-deep);
         white-space: nowrap;
         flex-shrink: 0;
-        margin-left: clamp(6px, 15vw, 150px);
       }
       .hud {
         display: flex;
         align-items: center;
         gap: clamp(4px, 1.5vw, 10px);
         flex-wrap: nowrap;
-        margin-right: clamp(6px, 12vw, 140px);
       }
       .pill {
         background: var(--white);
