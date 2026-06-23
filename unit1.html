@@ -116,13 +116,13 @@
       }
 
       /* header row */
-     .header {
+    .header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   flex-shrink: 0;
   padding: 4px 0 6px;
-  position: relative;
+  gap: clamp(6px, 2vw, 14px);
 }
 
 h1 {
@@ -131,9 +131,6 @@ h1 {
   color: var(--sun);
   -webkit-text-stroke: 1.5px var(--ocean-deep);
   white-space: nowrap;
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
 }
      
       .pill {
@@ -412,7 +409,7 @@ h1 {
     <div class="cloud cloud2"></div>
 
     <div class="wrap">
-     <div class="header">
+  <div class="header">
   <a class="reset-btn" href="index.html">⬅️ Back</a>
   <h1>Unit 2</h1>
   <button class="reset-btn" id="resetBtn">Play Again 🦜</button>
