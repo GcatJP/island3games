@@ -137,7 +137,6 @@
         align-items: center;
         gap: clamp(4px, 1.5vw, 10px);
         flex-wrap: nowrap;
-        <button class="reset-btn" id="voiceBtn" onclick="toggleVoice()">🔊 Voice</button>
       }
       .pill {
         background: var(--white);
@@ -418,6 +417,9 @@
       <div class="header">
         <h1>Unit 2</h1>
         <div class="hud">
+          <button class="reset-btn" id="voiceBtn" onclick="toggleVoice()">
+            🔊 Voice
+          </button>
           <button class="reset-btn" id="resetBtn">Play Again 🦜</button>
           <a class="reset-btn" href="index.html">⬅️ Back</a>
         </div>
@@ -561,7 +563,7 @@
         speak(card.type === "image" ? PAIRS[card.pairId].word : card.value);
         if (flippedCards.length === 2) {
           tries++;
-          document.getElementById("tryCount").textContent = tries;
+
           locked = true;
           const [a, b] = flippedCards;
           if (a.card.pairId === b.card.pairId) {
@@ -572,7 +574,7 @@
               spawnSparkles(b.el);
               playMatchJingle();
               matches++;
-              document.getElementById("matchCount").textContent = matches;
+
               flippedCards = [];
               locked = false;
               if (matches === PAIRS.length) setTimeout(showWin, 600);
@@ -641,8 +643,7 @@
         tries = 0;
         flippedCards = [];
         locked = false;
-        document.getElementById("matchCount").textContent = 0;
-        document.getElementById("tryCount").textContent = 0;
+
         document.getElementById("overlay").classList.remove("show");
         deck = buildDeck();
         render();
