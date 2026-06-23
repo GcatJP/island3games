@@ -540,7 +540,6 @@
 
         el.classList.add("flipped");
         flippedCards.push({ el, card });
-        speak(card.type === "image" ? PAIRS[card.pairId].word : card.value);
 
         if (flippedCards.length === 2) {
           tries++;
@@ -610,13 +609,6 @@
         document.getElementById("overlay").classList.remove("show");
         deck = buildDeck();
         render();
-      }
-      function speak(text) {
-        const utterance = new SpeechSynthesisUtterance(text);
-        utterance.lang = "en-US";
-        utterance.rate = 0.9;
-        utterance.pitch = 1.1;
-        window.speechSynthesis.speak(utterance);
       }
 
       document.getElementById("resetBtn").addEventListener("click", newGame);
