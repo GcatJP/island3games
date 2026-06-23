@@ -550,6 +550,8 @@
       }
 
       function onCardClick(el, card) {
+        getCtx();
+        if (locked) return;
         if (locked) return;
         if (
           el.classList.contains("flipped") ||
@@ -627,7 +629,7 @@
         utterance.rate = 0.9;
         utterance.pitch = 1.1;
         const voices = window.speechSynthesis.getVoices();
-        const preferred = voices.find((v) => v.lang === "en-GB");
+        const preferred = voices.find((v) => v.name === "Daniel");
         if (preferred) utterance.voice = preferred;
         window.speechSynthesis.speak(utterance);
       }

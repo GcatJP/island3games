@@ -415,12 +415,12 @@
 
     <div class="wrap">
       <div class="header">
-        <h1>Unit 1</h1>
+        <h1>Unit 2</h1>
         <div class="hud">
-          <button class="reset-btn" id="resetBtn">Play Again 🦜</button>
           <button class="reset-btn" id="voiceBtn" onclick="toggleVoice()">
             🔊 Voice
           </button>
+          <button class="reset-btn" id="resetBtn">Play Again 🦜</button>
           <a class="reset-btn" href="index.html">⬅️ Back</a>
         </div>
       </div>
@@ -440,14 +440,14 @@
     <script>
       /* ---- PAIRS — replace with your real image paths / words ---- */
       const PAIRS = [
-        { img: "images/apple.png", word: "apple" },
-        { img: "images/big.png", word: "big" },
-        { img: "images/book.png", word: "book" },
-        { img: "images/drink.png", word: "drink" },
-        { img: "images/eat.png", word: "eat" },
-        { img: "images/mom.png", word: "mom" },
-        { img: "images/pumpkin.png", word: "pumpkin" },
-        { img: "images/tiger.png", word: "tiger" },
+        { img: "images/marker.png", word: "marker" },
+        { img: "images/phone.png", word: "phone" },
+        { img: "images/glasses.png", word: "glasses" },
+        { img: "images/glue-stick.png", word: "glue stick" },
+        { img: "images/umbrella.png", word: "umbrella" },
+        { img: "images/watch.png", word: "watch" },
+        { img: "images/camera.png", word: "camera" },
+        { img: "images/dice.png", word: "dice" },
       ];
 
       /* ---- audio ---- */
@@ -550,6 +550,8 @@
       }
 
       function onCardClick(el, card) {
+        getCtx();
+        if (locked) return;
         if (locked) return;
         if (
           el.classList.contains("flipped") ||
@@ -560,10 +562,10 @@
 
         el.classList.add("flipped");
         flippedCards.push({ el, card });
-
+        speak(card.type === "image" ? PAIRS[card.pairId].word : card.value);
         if (flippedCards.length === 2) {
           tries++;
-          document.getElementById("tryCount").textContent = tries;
+
           locked = true;
           const [a, b] = flippedCards;
           if (a.card.pairId === b.card.pairId) {
@@ -574,7 +576,7 @@
               spawnSparkles(b.el);
               playMatchJingle();
               matches++;
-              document.getElementById("matchCount").textContent = matches;
+
               flippedCards = [];
               locked = false;
               if (matches === PAIRS.length) setTimeout(showWin, 600);
@@ -618,7 +620,6 @@
         document.getElementById("overlay").classList.add("show");
         playWinFanfare();
       }
-
       let voiceOn = true;
 
       function speak(text) {
@@ -628,17 +629,23 @@
         utterance.rate = 0.9;
         utterance.pitch = 1.1;
         const voices = window.speechSynthesis.getVoices();
-        const preferred = voices.find((v) => v.lang === "en-GB");
+        const preferred = voices.find((v) => v.name === "karen");
         if (preferred) utterance.voice = preferred;
         window.speechSynthesis.speak(utterance);
+      }
+
+      function toggleVoice() {
+        voiceOn = !voiceOn;
+        document.getElementById("voiceBtn").textContent = voiceOn
+          ? "🔊 Voice"
+          : "🔇 Voice";
       }
       function newGame() {
         matches = 0;
         tries = 0;
         flippedCards = [];
         locked = false;
-        document.getElementById("matchCount").textContent = 0;
-        document.getElementById("tryCount").textContent = 0;
+
         document.getElementById("overlay").classList.remove("show");
         deck = buildDeck();
         render();
