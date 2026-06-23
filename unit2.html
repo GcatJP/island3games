@@ -119,11 +119,10 @@
       .header {
         display: flex;
         align-items: center;
-        justify-content: space-between;
+        justify-content: center;
         flex-shrink: 0;
         padding: 4px 0 6px;
-        position: relative;
-        height: clamp(36px, 6vh, 52px);
+        gap: clamp(6px, 2vw, 14px);
       }
 
       h1 {
@@ -132,16 +131,8 @@
         color: var(--sun);
         -webkit-text-stroke: 1.5px var(--ocean-deep);
         white-space: nowrap;
-        position: absolute;
-        left: 50%;
-        transform: translateX(-50%);
       }
-      .hud {
-        display: flex;
-        align-items: center;
-        gap: clamp(4px, 1.5vw, 10px);
-        flex-wrap: nowrap;
-      }
+
       .pill {
         background: var(--white);
         border: 2.5px solid var(--ocean);
@@ -405,12 +396,7 @@
       <div class="header">
         <a class="reset-btn" href="index.html">⬅️ Back</a>
         <h1>Unit 2</h1>
-        <div class="hud">
-          <button class="reset-btn" id="voiceBtn" onclick="toggleVoice()">
-            🔊 Voice
-          </button>
-          <button class="reset-btn" id="resetBtn">Play Again 🦜</button>
-        </div>
+        <button class="reset-btn" id="resetBtn">Play Again 🦜</button>
       </div>
 
       <div class="grid" id="grid"></div>
@@ -418,9 +404,9 @@
 
     <div class="overlay" id="overlay">
       <div class="win-card">
-        <div class="win-emojis">🏆🦜🏆</div>
+        <div class="win-emojis">🏆 Congratulations! 🏆</div>
         <h2>You found all the treasure!</h2>
-        <p id="winStats">Great matching!</p>
+        <p id="winStats">Adventure Island</p>
         <button class="reset-btn" id="playAgainBtn">Play Again 🌴</button>
       </div>
     </div>
@@ -440,16 +426,13 @@
 
       /* ---- audio ---- */
       let audioCtx = null;
-
-      async function getCtx() {
+      function getCtx() {
         if (!audioCtx)
           audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        if (audioCtx.state === "suspended") await audioCtx.resume();
         return audioCtx;
       }
-
-      async function playTone(freq, startTime, duration, gainPeak) {
-        const ctx = await getCtx();
+      function playTone(freq, startTime, duration, gainPeak) {
+        const ctx = getCtx();
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
         osc.type = "triangle";
@@ -462,22 +445,22 @@
         osc.start(startTime);
         osc.stop(startTime + duration + 0.02);
       }
-      async function playMatchJingle() {
-        const ctx = await getCtx();
-        const now = ctx.currentTime;
+      function playMatchJingle() {
+        const ctx = getCtx(),
+          now = ctx.currentTime;
         [523.25, 659.25, 783.99, 1046.5].forEach((f, i) =>
           playTone(f, now + i * 0.09, 0.22, 0.22),
         );
       }
-      async function playWrongSound() {
-        const ctx = await getCtx();
-        const now = ctx.currentTime;
+      function playWrongSound() {
+        const ctx = getCtx(),
+          now = ctx.currentTime;
         playTone(220, now, 0.18, 0.12);
         playTone(196, now + 0.08, 0.18, 0.1);
       }
-      async function playWinFanfare() {
-        const ctx = await getCtx();
-        const now = ctx.currentTime;
+      function playWinFanfare() {
+        const ctx = getCtx(),
+          now = ctx.currentTime;
         [523.25, 523.25, 659.25, 783.99, 1046.5, 1318.51].forEach((f, i) =>
           playTone(f, now + [0, 0.15, 0.3, 0.45, 0.6, 0.8][i], 0.3, 0.22),
         );
@@ -543,7 +526,7 @@
       function onCardClick(el, card) {
         getCtx();
         if (locked) return;
-
+        if (locked) return;
         if (
           el.classList.contains("flipped") ||
           el.classList.contains("matched")
@@ -611,12 +594,7 @@
         document.getElementById("overlay").classList.add("show");
         playWinFanfare();
       }
-
-      if (window.speechSynthesis.getVoices().length === 0) {
-        window.speechSynthesis.onvoiceschanged = trySpeak;
-      } else {
-        trySpeak();
-      }
+      let voiceOn = true;
 
       function newGame() {
         matches = 0;
